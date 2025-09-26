@@ -1,0 +1,24 @@
+spotify:
+  client-id: ${SPOTIFY_CLIENT_ID:fac8244b17f14ebabd8b0ac1b96bd123}
+  client-secret: ${SPOTIFY_CLIENT_SECRET:5824ee1356e14e4384cb3362059c7a53}
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 60000
+        readTimeout: 60000
+        loggerLevel: full
+      spotifyClient:
+        url: "https://api.spotify.com/v1"
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "health,info"
+server:
+  port :  9002
+  servlet:
+    contextPath: /conector
