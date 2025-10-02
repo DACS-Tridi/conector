@@ -34,6 +34,17 @@ public class SpotifyService implements ISpotifyService {
             .map(this::mapToAlbumDTO)
             .collect(Collectors.toList());
     }
+    
+    public List<AlbumDTO> searchAlbums(String query) {
+        String token = tokenProvider.getAccessToken();
+
+        SpotifyResponse response = spotifyClient.searchAlbums("Bearer " + token, query, "album", 10);
+
+        return response.getAlbums().getItems()
+            .stream()
+            .map(this::mapToAlbumDTO)
+            .collect(Collectors.toList());
+    }
 
     // TODO: Buscar un automapper o algo así
     private AlbumDTO mapToAlbumDTO(AlbumItem item) {

@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dacs.conector.dto.spotify.SpotifyResponse;
 
-@FeignClient(name = "spotifyClient", url = "${feign.client.config.spotifyClient.url}")
+@FeignClient(
+		name = "spotifyClient", 
+		url = "${feign.client.config.spotifyClient.url}"
+		)
 public interface SpotifyClient {
 
     @GetMapping("/browse/new-releases")
@@ -19,4 +22,16 @@ public interface SpotifyClient {
     default SpotifyResponse getNewReleases(String authorization) {
         return getNewReleases(authorization, 10);
     }
+    
+    @GetMapping("/search")
+    SpotifyResponse searchAlbums(
+            @RequestHeader("Authorization") String authorization,
+            @RequestParam("q") String query,
+            @RequestParam("type") String type,
+            @RequestParam(value = "limit", defaultValue = "10") int limit
+        );
+
+        default SpotifyResponse searchAlbums(String authorization, String query) {
+            return searchAlbums(authorization, query, "album", 10);
+        }
 }
