@@ -3,8 +3,8 @@ package com.dacs.conector.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.dacs.conector.api.client.SpotifyClient;
 import com.dacs.conector.dto.spotify.SpotifyResponse;
@@ -26,7 +26,6 @@ public class SpotifyService implements ISpotifyService {
     @Override
     public List<AlbumDTO> getAlbums() {
         String token = tokenProvider.getAccessToken();
-
         SpotifyResponse response = spotifyClient.getNewReleases("Bearer " + token);
 
         return response.getAlbums().getItems()
@@ -34,10 +33,10 @@ public class SpotifyService implements ISpotifyService {
             .map(this::mapToAlbumDTO)
             .collect(Collectors.toList());
     }
-    
+
+    @Override
     public List<AlbumDTO> searchAlbums(String query) {
         String token = tokenProvider.getAccessToken();
-
         SpotifyResponse response = spotifyClient.searchAlbums("Bearer " + token, query, "album", 10);
 
         return response.getAlbums().getItems()
@@ -46,7 +45,18 @@ public class SpotifyService implements ISpotifyService {
             .collect(Collectors.toList());
     }
 
-    // TODO: Buscar un automapper o algo así
+    @Override
+    public AlbumDTO getAlbumById(String id) {
+        String token = tokenProvider.getAccessToken();
+        AlbumItem album = spotifyClient.getAlbumById("Bearer " + token, id);
+
+        if (album == null) {
+            throw new RuntimeException("Album not found for id: " + id);
+        }
+
+        return mapToAlbumDTO(album);
+    }
+
     private AlbumDTO mapToAlbumDTO(AlbumItem item) {
         AlbumDTO dto = new AlbumDTO();
         dto.setId(item.getId());
@@ -60,7 +70,7 @@ public class SpotifyService implements ISpotifyService {
         );
         dto.setArtists(
             item.getArtists().stream()
-                .map(artist -> artist.getName())
+                .map(a -> a.getName())
                 .collect(Collectors.toList())
         );
         return dto;

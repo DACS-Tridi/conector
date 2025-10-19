@@ -25,4 +25,9 @@ public class SpotifyController {
     public List<AlbumDTO> searchAlbums(@RequestParam("q") String query) {
         return spotifyService.searchAlbums(query);
     }
+    
+    @GetMapping("/spotify/album")
+    public AlbumDTO getAlbumById(@RequestParam("id") String id) {
+        return spotifyService.getAlbumById(id);
+    }
 }
