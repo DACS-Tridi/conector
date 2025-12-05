@@ -48,6 +48,7 @@ public class SpotifyService implements ISpotifyService {
     @Override
     public AlbumDTO getAlbumById(String id) {
         String token = tokenProvider.getAccessToken();
+        log.info(token);
         AlbumItem album = spotifyClient.getAlbumById("Bearer " + token, id);
 
         if (album == null) {

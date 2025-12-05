@@ -23,11 +23,10 @@ public class SpotifyController {
     
     @GetMapping("/spotify/albums/search")
     public List<AlbumDTO> searchAlbums(@RequestParam("q") String query) {
-    		
         return spotifyService.searchAlbums(query);
     }
     
-    @GetMapping("/spotify/album")
+    @GetMapping("/spotify/album/")
     public AlbumDTO getAlbumById(@RequestParam("id") String id) {
         return spotifyService.getAlbumById(id);
     }
